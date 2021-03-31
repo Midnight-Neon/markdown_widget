@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:markdown/markdown.dart' as m;
+import 'package:markdown_widget/tags/LatexBlock.dart';
 import 'input.dart';
 import 'a.dart';
 import 'img.dart';
 import 'code.dart';
 import 'video.dart';
+
 import 'markdown_tags.dart';
 import '../config/html_support.dart';
 import '../config/style_config.dart';
@@ -103,6 +105,7 @@ class P {
             if (node.tag == img) return getImageSpan(node);
             if (node.tag == video) return getVideoSpan(node);
             if (node.tag == a) return getLinkSpan(node);
+            if (node.tag == latexBlock) return getLatexBlockSpan(node);
             if (node.tag == input) return getInputSpan(node);
             if (node.tag == other) return getOtherWidgetSpan(node);
             return getBlockSpan(

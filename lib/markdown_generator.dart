@@ -9,6 +9,28 @@ import 'config/widget_config.dart';
 import 'markdown_helper.dart';
 import 'markdown_toc.dart';
 
+class LatexInlineSyntax extends m.InlineSyntax {
+  LatexInlineSyntax({
+    String pattern = r'\$(.*?)\$',
+  }) : super(pattern);
+  @override
+  bool onMatch(m.InlineParser parser, Match match) {
+    /// This creates a new element with the tag name `LatexBlock`
+    /// The `textContent` of this new tag will be the
+    /// pattern match $without$ the dashes.
+    ///
+
+    final withoutDashes = match.group(0).replaceAll(RegExp(r'\$'), "");
+
+    m.Element el = m.Element.text("LatexBlock", withoutDashes);
+    String url = "https://www.zhihu.com/equation?tex=" + withoutDashes;
+    el.attributes['src'] = Uri.encodeFull(url);
+
+    parser.addNode(el);
+    return true;
+  }
+}
+
 ///use [MarkdownGenerator] to transform markdown data to [Widget] list, so you can render it by any type of [ListView]
 class MarkdownGenerator {
   MarkdownGenerator({
@@ -20,7 +42,7 @@ class MarkdownGenerator {
     final m.Document document = m.Document(
         extensionSet: m.ExtensionSet.gitHubFlavored,
         encodeHtml: false,
-        inlineSyntaxes: [TaskListSyntax()]);
+        inlineSyntaxes: [TaskListSyntax(), LatexInlineSyntax()]);
     final List<String> lines = data.split(RegExp(r'(\r?\n)|(\r?\t)|(\r)'));
     List<m.Node> nodes = document.parseLines(lines);
     _tocList = LinkedHashMap();
@@ -45,6 +67,9 @@ class MarkdownGenerator {
     final tag = (node as m.Element).tag;
     Widget result;
     switch (tag) {
+      case latexBlock:
+        result = _helper.getPWidget(node);
+        break;
       case h1:
         _tocList[_widgets.length] = Toc(
             node.textContent.replaceAll(htmlRep, ''),
@@ -54,6 +79,7 @@ class MarkdownGenerator {
             0);
         result = _helper.getTitleWidget(node, h1);
         break;
+
       case h2:
         _tocList[_widgets.length] = Toc(
             node.textContent.replaceAll(htmlRep, ''),

@@ -31,3 +31,4 @@ const String input = 'input';
 
 ///custom tag
 const String other = 'other';
+const String latexBlock = 'LatexBlock';

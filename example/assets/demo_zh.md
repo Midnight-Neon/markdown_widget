@@ -20,6 +20,7 @@ Language:[简体中文](https://github.com/asjqkkkk/markdown_widget/blob/master/
 
 ### 🔑简单使用
 
+这是数学公式$latex$
 
 ```
 import 'package:flutter/material.dart';

@@ -17,6 +17,9 @@ dependencies:
   #highlight code
   highlight: ^0.6.0
   flutter_highlight: ^0.6.0
+  flutter_svg: 
+    git:
+      url: https://github.com/Midnight-Neon/flutter_svg.git
 
   #html tag parser
   html: ^0.14.0+4
